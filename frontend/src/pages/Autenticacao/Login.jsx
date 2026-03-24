@@ -104,7 +104,7 @@ function Login() {
         <p className="mt-6 text-purple-700 text-sm">
           Ainda não tem conta?{" "}
           <Link
-            to="/"
+            to="/cadastro"
             className="text-amber-500 font-semibold hover:text-amber-600">
             Criar cadastro
           </Link>

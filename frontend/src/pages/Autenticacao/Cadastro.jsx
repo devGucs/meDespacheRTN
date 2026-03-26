@@ -1,15 +1,18 @@
-import logo from "../../assets/midislogoE.png"
-import { Link, useNavigate } from "react-router-dom"; // 🔥 TROCA AQUI
+import logo from "../../assets/midislogoE.png";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useState } from "react";
 
 function Cadastro() {
 
-  const navigate = useNavigate(); // 🔥 AQUI
+  const navigate = useNavigate();
 
+  const [tipo, setTipo] = useState("consumidor");
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [nomeLoja, setNomeLoja] = useState("");
+  const [cnpj, setCnpj] = useState("");
 
   const handleCadastro = async (e) => {
     e.preventDefault();
@@ -33,12 +36,12 @@ function Cadastro() {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/auth/cadastro", { // 🔥 AJUSTEI ROTA
+      const response = await fetch("http://localhost:3000/auth/cadastro", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ nome, email, senha }),
+        body: JSON.stringify({ nome, email, senha, tipo }),
       });
 
       const data = await response.json();
@@ -56,7 +59,7 @@ function Cadastro() {
         icon: "success",
         title: "Cadastro realizado!",
       }).then(() => {
-        navigate("/login"); // 🔥 CORRETO
+        navigate("/login");
       });
 
     } catch {
@@ -69,57 +72,151 @@ function Cadastro() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-purple-700 pt-24">
-      <div className="bg-white shadow-xl rounded-xl p-10 w-full max-w-md flex flex-col items-center">
+    <div className="min-h-screen flex items-center justify-center bg-purple-700 px-4 pt-36 pb-10">
 
-        <img src={logo} className="h-20 mb-4" alt="logo" />
+      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md flex flex-col items-center">
 
-        <h2 className="text-2xl font-bold text-purple-700 mb-6">
-          Criar Conta
+        {/* LOGO */}
+        <img src={logo} className="h-16 mb-2" alt="logo" />
+
+        {/* TÍTULO */}
+        <h2 className="text-2xl font-bold text-gray-800">
+          Crie sua conta
         </h2>
 
+        <p className="text-gray-500 mb-6 text-center">
+          Escolha seu perfil para começar
+        </p>
+
+        {/* SELETOR */}
+        <div className="flex bg-gray-200 rounded-xl p-1 w-full mb-6">
+
+          <button
+            type="button"
+            onClick={() => setTipo("consumidor")}
+            className={`w-1/2 py-2 rounded-lg text-sm font-medium transition ${
+              tipo === "consumidor"
+                ? "bg-white shadow text-gray-800"
+                : "text-gray-500"
+            }`}
+          >
+            🛒 Consumidor
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setTipo("comerciante")}
+            className={`w-1/2 py-2 rounded-lg text-sm font-medium transition ${
+              tipo === "comerciante"
+                ? "bg-white shadow text-gray-800"
+                : "text-gray-500"
+            }`}
+          >
+            🏪 Comerciante
+          </button>
+
+        </div>
+
+        {/* FORM */}
         <form onSubmit={handleCadastro} className="w-full flex flex-col gap-4">
 
-          <input
-            type="text"
-            placeholder="Seu nome"
-            value={nome}
-            onChange={(e)=> setNome(e.target.value)}
-            className="border rounded-lg px-4 py-2"
-          />
+          {/* NOME */}
+          <div>
+            <label className="text-sm text-gray-700 font-medium">
+              Nome completo *
+            </label>
+            <input
+              type="text"
+              placeholder="Seu nome"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            />
+          </div>
 
-          <input
-            type="email"
-            placeholder="seuemail@gmail.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="border rounded-lg px-4 py-2"
-          />
+          {/* EMAIL */}
+          <div>
+            <label className="text-sm text-gray-700 font-medium">
+              E-mail *
+            </label>
+            <input
+              type="email"
+              placeholder="seu@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            />
+          </div>
 
-          <input
-            type="password"
-            placeholder="••••••••"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            className="border rounded-lg px-4 py-2"
-          />
+          {/* SENHA */}
+          <div>
+            <label className="text-sm text-gray-700 font-medium">
+              Senha *
+            </label>
+            <input
+              type="password"
+              placeholder="Mín. 8 caracteres"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            />
+          </div>
 
-          <button type="submit" className="bg-amber-400 py-2 rounded-lg">
-            Criar Conta
+            {tipo === "comerciante" && (
+  <>
+    {/* NOME DA LOJA */}
+    <div>
+      <label className="text-sm text-gray-700 font-medium">
+        Nome da loja *
+      </label>
+      <input
+        type="text"
+        placeholder="Nome da sua loja"
+        value={nomeLoja}
+        onChange={(e) => setNomeLoja(e.target.value)}
+        className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+      />
+    </div>
+
+    {/* CNPJ */}
+    <div>
+      <label className="text-sm text-gray-700 font-medium">
+        CNPJ *
+      </label>
+      <input
+        type="text"
+        placeholder="00.000.000/0000-00"
+        value={cnpj}
+        onChange={(e) => setCnpj(e.target.value)}
+        className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+      />
+    </div>
+  </>
+)}
+
+          {/* BOTÃO */}
+          <button
+            type="submit"
+            className="bg-purple-500 text-white py-3 rounded-full font-semibold hover:bg-purple-600 transition"
+          >
+            Cadastrar
           </button>
 
         </form>
 
-        <p className="mt-6 text-sm">
-          Já possui uma conta?
-          <Link to="/login" className="text-amber-500">
-            Entrar
+        {/* LOGIN */}
+        <p className="mt-6 text-sm text-gray-500">
+          Já tem conta?{" "}
+          <Link to="/login" className="text-purple-700 font-medium">
+            Faça login
           </Link>
         </p>
 
       </div>
+
     </div>
   );
 }
 
 export default Cadastro;
+

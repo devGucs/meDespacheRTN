@@ -3,14 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
-
+import { Eye, EyeOff } from "lucide-react";
 
 
 function Login() {
 
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-
+  const [mostrarSenha, setMostrarSenha] = useState(false);
   const navigate = useNavigate();
 
    const handleLogin = async (e) => {
@@ -80,21 +80,32 @@ function Login() {
           </div>
 
           <div className="flex flex-col">
-            <label className="text-purple-700 font-medium mb-1">
-              Senha
-            </label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-              className="border border-purple-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-          </div>
+  <label className="text-purple-700 font-medium mb-1">
+    Senha
+  </label>
+
+  <div className="relative">
+    <input
+      type={mostrarSenha ? "text" : "password"}
+      placeholder="••••••••"
+      value={senha}
+      onChange={(e) => setSenha(e.target.value)}
+      className="border border-purple-300 rounded-lg px-4 py-2 pr-10 w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
+    />
+
+    <button
+      type="button"
+      onClick={() => setMostrarSenha(!mostrarSenha)}
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-purple-500 hover:text-purple-700"
+    >
+      {mostrarSenha ? <EyeOff size={20} /> : <Eye size={20} />}
+    </button>
+  </div>
+</div>
 
           <button
             type="submit"
-            className="bg-amber-400 text-purple-900 font-semibold py-2 rounded-lg shadow-md hover:bg-amber-500 transition duration-300"
+            className="bg-purple-500 text-white font-semibold py-2 rounded-lg shadow-md hover:bg-purple-600 transition duration-300"
           >
             Entrar
           </button>

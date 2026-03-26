@@ -1,65 +1,31 @@
-import logo from "../assets/midislogoE.png";
 import { Link } from "react-router-dom";
 
-function LandingPage() {
+function Landing() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col font-sans">
 
-      {/* HEADER */}
-      <header className="fixed top-0 left-0 w-full bg-purple-50 shadow-md z-50">
-        <nav className="flex justify-between items-center px-8 py-4">
+     
+      <section
+        className="h-[85vh] flex items-center justify-center mt-24 bg-cover bg-center relative"
+        style={{ backgroundImage: "url('/bg-comercios.png')" }}
+      >
 
-          <div className="flex items-center gap-3">
-            <img src={logo} alt="logo" className="h-14" />
-            <h1 className="text-2xl font-bold text-purple-700">
-              ME DESPACHE
-            </h1>
-          </div>
+        {/* overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-purple-900/80 to-purple-700/70"></div>
 
-          <ul className="flex gap-6 text-purple-700 font-medium">
-            <li>
-              <Link to="/" className="hover:text-amber-400 transition">
-                Home
-              </Link>
-            </li>
-            <li>
-              <a href="#" className="hover:text-amber-400 transition">
-                Sobre
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-amber-400 transition">
-                Contato
-              </a>
-            </li>
-            <li>
-              <Link
-                to="/login"
-                className="hover:text-amber-400 font-semibold"
-              >
-                Login
-              </Link>
-            </li>
-          </ul>
+        <div className="relative flex flex-col items-center text-center space-y-6 px-4 animate-fadeIn">
 
-        </nav>
-      </header>
-
-      {/* HERO */}
-      <section className="h-[80vh] flex items-center justify-center bg-purple-700 mt-24">
-        <div className="flex flex-col items-center text-center space-y-6 px-4">
-
-          <h2 className="text-4xl md:text-5xl font-bold text-white">
+          <h2 className="text-4xl md:text-6xl font-bold text-white leading-tight drop-shadow-lg">
             Transforme seus desafios em oportunidades
           </h2>
 
-          <p className="text-xl md:text-2xl text-white max-w-2xl">
+          <p className="text-lg md:text-2xl text-gray-200 max-w-2xl">
             Descubra como nossa plataforma pode impulsionar seu negócio
             e melhorar a procura.
           </p>
 
           <Link to="/login">
-            <button className="bg-amber-400 text-purple-900 font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-amber-500 transition duration-300">
+            <button className="bg-amber-400 text-purple-900 font-semibold px-8 py-3 rounded-xl shadow-lg hover:bg-amber-500 hover:scale-105 transition duration-300">
               Comece agora!
             </button>
           </Link>
@@ -68,16 +34,16 @@ function LandingPage() {
       </section>
 
       {/* BENEFÍCIOS */}
-      <section className="py-20 bg-purple-50 flex flex-col items-center gap-10 px-4">
+      <section className="py-20 bg-purple-50 flex flex-col items-center gap-12 px-4">
 
-        <h2 className="text-2xl font-bold text-purple-800 text-center">
+        <h2 className="text-3xl font-bold text-purple-800 text-center">
           POR QUE ESCOLHER NOSSA PLATAFORMA?
         </h2>
 
-        <div className="flex flex-wrap justify-center gap-6">
+        <div className="flex flex-wrap justify-center gap-8">
 
           {/* CARD 1 */}
-          <div className="w-64 p-6 bg-purple-700 text-white rounded-lg shadow-md text-center transform hover:scale-105 hover:shadow-xl transition">
+          <div className="w-64 p-6 bg-purple-700 text-white rounded-2xl shadow-lg text-center transform hover:scale-105 hover:shadow-2xl transition duration-300">
             <h3 className="text-lg font-semibold mb-2">
               FÁCIL DE USAR
             </h3>
@@ -87,7 +53,7 @@ function LandingPage() {
           </div>
 
           {/* CARD 2 */}
-          <div className="w-64 p-6 bg-purple-700 text-white rounded-lg shadow-md text-center transform hover:scale-105 hover:shadow-xl transition">
+          <div className="w-64 p-6 bg-purple-700 text-white rounded-2xl shadow-lg text-center transform hover:scale-105 hover:shadow-2xl transition duration-300">
             <h3 className="text-lg font-semibold mb-2">
               DIGITALIZAÇÃO DO NEGÓCIO
             </h3>
@@ -97,7 +63,7 @@ function LandingPage() {
           </div>
 
           {/* CARD 3 */}
-          <div className="w-64 p-6 bg-purple-700 text-white rounded-lg shadow-md text-center transform hover:scale-105 hover:shadow-xl transition">
+          <div className="w-64 p-6 bg-purple-700 text-white rounded-2xl shadow-lg text-center transform hover:scale-105 hover:shadow-2xl transition duration-300">
             <h3 className="text-lg font-semibold mb-2">
               SUPORTE DEDICADO
             </h3>
@@ -110,22 +76,91 @@ function LandingPage() {
 
       </section>
 
-      {/* FOOTER */}
-      <footer className="bg-black text-white py-6 px-10 flex flex-col md:flex-row items-center justify-between">
+    {/* PLANOS */}
+<section className="py-20 bg-gradient-to-b from-purple-700 to-purple-900 text-white flex flex-col items-center px-4">
 
-        <div className="flex items-center gap-3 mb-3 md:mb-0">
-          <img src={logo} alt="logo" className="h-10" />
-          <span className="text-lg font-semibold">ME DESPACHE</span>
-        </div>
+  <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
+    ESCOLHA O MELHOR PLANO PARA VOCÊ
+  </h2>
 
-        <p className="text-sm opacity-80 text-center">
-          © 2025 ME DESPACHE — Todos os direitos reservados.
-        </p>
+  <p className="text-purple-200 mb-10 text-center">
+    Potencialize seu comércio com mais visibilidade 🚀
+  </p>
 
-      </footer>
+  <div className="flex flex-wrap justify-center gap-8">
 
+    {/* BRONZE */}
+    <div className="bg-white text-gray-800 rounded-2xl shadow-xl p-6 w-72 text-center transform hover:scale-105 transition">
+
+      <h3 className="text-xl font-bold text-purple-700 mb-2">
+        🥉 Bronze
+      </h3>
+
+      <ul className="text-sm text-gray-600 mb-6 space-y-2">
+        <li>✔ 1 dispositivo</li>
+        <li>✔ Visibilidade básica</li>
+        <li>✔ Suporte padrão</li>
+      </ul>
+
+      <p className="text-2xl font-bold mb-4">
+        R$19,90<span className="text-sm">/mês</span>
+      </p>
+
+      <button className="bg-purple-700 text-white px-4 py-2 rounded-lg hover:bg-purple-800 transition">
+        Escolher plano
+      </button>
+    </div>
+
+    {/* PRATA */}
+    <div className="bg-white text-gray-800 rounded-2xl shadow-2xl p-6 w-72 text-center transform hover:scale-110 transition border-4 border-amber-400">
+
+      <h3 className="text-xl font-bold text-purple-700 mb-2">
+        🥈 Prata
+      </h3>
+
+      <ul className="text-sm text-gray-600 mb-6 space-y-2">
+        <li>✔ 3 dispositivos</li>
+        <li>✔ Destaque nos comércios</li>
+        <li>✔ Suporte prioritário</li>
+      </ul>
+
+      <p className="text-2xl font-bold mb-4">
+        R$29,90<span className="text-sm">/mês</span>
+      </p>
+
+      <button className="bg-amber-400 text-purple-900 px-4 py-2 rounded-lg font-semibold hover:bg-amber-500 transition">
+        Escolher plano
+      </button>
+    </div>
+
+    {/* OURO */}
+    <div className="bg-white text-gray-800 rounded-2xl shadow-xl p-6 w-72 text-center transform hover:scale-105 transition">
+
+      <h3 className="text-xl font-bold text-purple-700 mb-2">
+        🥇 Ouro
+      </h3>
+
+      <ul className="text-sm text-gray-600 mb-6 space-y-2">
+        <li>✔ Dispositivos ilimitados</li>
+        <li>✔ Máxima visibilidade</li>
+        <li>✔ Suporte VIP</li>
+      </ul>
+
+      <p className="text-2xl font-bold mb-4">
+        R$39,90<span className="text-sm">/mês</span>
+      </p>
+
+      <button className="bg-purple-700 text-white px-4 py-2 rounded-lg hover:bg-purple-800 transition">
+        Escolher plano
+      </button>
+    </div>
+
+  </div>
+
+</section>
+    
     </div>
   );
 }
 
-export default Home;
+export default Landing;

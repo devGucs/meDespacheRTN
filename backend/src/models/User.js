@@ -1,18 +1,24 @@
 const db = require("../config/db");
 
 // buscar por email
-const findByEmail = (email, callback) => {
-  const sql = "SELECT * FROM usuarios WHERE email = ?";
-  db.query(sql, [email], callback);
+const findByEmail = async (email) => {
+  const sql = "SELECT * FROM usuarios WHERE email = $1";
+  const result = await db.query(sql, [email]);
+  return result.rows;
 };
 
 // criar usuário
-const create = (nome, email, senha, callback) => {
-  const sql = "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)";
-  db.query(sql, [nome, email, senha], callback);
+const create = async (nome, email, senha) => {
+  const sql = `
+    INSERT INTO usuarios (nome, email, senha)
+    VALUES ($1, $2, $3)
+    RETURNING id, nome, email
+  `;
+  const result = await db.query(sql, [nome, email, senha]);
+  return result.rows[0];
 };
 
 module.exports = {
   findByEmail,
-  create
+  create,
 };

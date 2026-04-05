@@ -8,7 +8,7 @@ function Footers() {
       </div>
 
       <p className="text-sm opacity-80">
-        © 2025 Me Despache — Todos os direitos reservados.
+        © 2026 Me Despache — Todos os direitos reservados.
       </p>
     </footer>
   )

@@ -1,16 +1,36 @@
 const express = require("express");
 const cors = require("cors");
+require("dotenv").config();
 
-const authRoutes = require("./src/routes/authRoutes");
+const authRoutes = require("./routes/authRoutes");
+const db = require("./config/db");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// rota base
+// rota de teste
+app.get("/", async (req, res) => {
+  try {
+    const result = await db.query("SELECT NOW()");
+    res.status(200).json({
+      message: "API funcionando",
+      serverTime: result.rows[0].now,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Erro ao testar conexão com banco",
+      error: error.message,
+    });
+  }
+});
+
+// rotas
 app.use("/auth", authRoutes);
 
-app.listen(3000, () => {
-  console.log("Servidor rodando na porta 3000");
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });

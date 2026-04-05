@@ -1,8 +1,7 @@
 const authService = require("../services/authService");
 
-
 // =======================
-// 📌 CADASTRO
+// CADASTRO
 // =======================
 const register = async (req, res) => {
   try {
@@ -10,15 +9,22 @@ const register = async (req, res) => {
 
     const result = await authService.register(nome, email, senha);
 
-    res.status(201).json(result);
+    return res.status(201).json(result);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    if (err.message === "Preencha todos os campos") {
+      return res.status(400).json({ error: err.message });
+    }
+
+    if (err.message === "Email já cadastrado") {
+      return res.status(409).json({ error: err.message });
+    }
+
+    return res.status(500).json({ error: "Erro interno no servidor" });
   }
 };
 
-
 // =======================
-// 📌 LOGIN
+// LOGIN
 // =======================
 const login = async (req, res) => {
   try {
@@ -26,14 +32,26 @@ const login = async (req, res) => {
 
     const usuario = await authService.login(email, senha);
 
-    res.status(200).json(usuario);
+    return res.status(200).json(usuario);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    if (err.message === "Preencha todos os campos") {
+      return res.status(400).json({ error: err.message });
+    }
+
+    if (err.message === "Usuário não encontrado") {
+      return res.status(404).json({ error: err.message });
+    }
+
+    if (err.message === "Senha incorreta") {
+      return res.status(401).json({ error: err.message });
+    }
+
+    return res.status(500).json({ error: "Erro interno no servidor" });
   }
 };
-
 
 module.exports = {
   register,
   login,
 };
+``

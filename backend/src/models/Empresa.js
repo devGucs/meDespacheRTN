@@ -1,18 +1,24 @@
 const db = require("../config/db");
 
 // buscar empresa pelo usuário
-const findByUsuarioId = (usuarioId, callback) => {
-  const sql = "SELECT * FROM empresas WHERE usuario_id = ?";
-  db.query(sql, [usuarioId], callback);
+const findByUsuarioId = async (usuarioId) => {
+  const sql = "SELECT * FROM empresas WHERE usuario_id = $1";
+  const result = await db.query(sql, [usuarioId]);
+  return result.rows;
 };
 
 // criar empresa
-const create = (nome, usuarioId, callback) => {
-  const sql = "INSERT INTO empresas (nome, usuario_id) VALUES (?, ?)";
-  db.query(sql, [nome, usuarioId], callback);
+const create = async (nome, usuarioId) => {
+  const sql = `
+    INSERT INTO empresas (nome, usuario_id)
+    VALUES ($1, $2)
+    RETURNING *
+  `;
+  const result = await db.query(sql, [nome, usuarioId]);
+  return result.rows[0];
 };
 
 module.exports = {
   findByUsuarioId,
-  create
+  create,
 };

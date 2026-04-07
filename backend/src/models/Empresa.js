@@ -1,4 +1,4 @@
-const db = require("../config/db");
+const db = require("../config/supabase");
 
 // buscar empresa pelo usuário
 const findByUsuarioId = async (usuarioId) => {

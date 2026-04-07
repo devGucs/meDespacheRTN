@@ -2,12 +2,16 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
-const authRoutes = require("./routes/authRoutes");
-const db = require("./config/db");
+const authRoutes = require("./src/routes/authRoutes");
+const db = require("./src/config/supabase");
 
 const app = express();
 
-app.use(cors());
+// ⚠️ CORS liberado (ajusta depois com domínio do Vercel)
+app.use(cors({
+  origin: "*"
+}));
+
 app.use(express.json());
 
 // rota de teste
@@ -19,6 +23,7 @@ app.get("/", async (req, res) => {
       serverTime: result.rows[0].now,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       message: "Erro ao testar conexão com banco",
       error: error.message,
@@ -29,8 +34,10 @@ app.get("/", async (req, res) => {
 // rotas
 app.use("/auth", authRoutes);
 
-const PORT = process.env.PORT || 3000;
+// 🚀 PORTA DINÂMICA (OBRIGATÓRIO NO RENDER)
+const PORT = process.env.PORT || 3001;
 
-app.listen(PORT, () => {
+// 🔥 MELHORADO: escutar em 0.0.0.0
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });

@@ -1,19 +1,8 @@
-const { Pool } = require("pg");
-require("dotenv").config();
+const { createClient } = require('@supabase/supabase-js');
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
 
-pool.on("connect", () => {
-  console.log("Banco PostgreSQL conectado");
-});
+const supabase = createClient(supabaseUrl, supabaseKey);
 
-pool.on("error", (err) => {
-  console.error("Erro inesperado no PostgreSQL:", err.message);
-});
-
-module.exports = pool;
+module.exports = supabase;

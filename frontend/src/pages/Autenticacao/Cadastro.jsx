@@ -1,11 +1,11 @@
 import logo from "../../assets/midislogoE.png"
-import { Link, useNavigate } from "react-router-dom"; // 🔥 TROCA AQUI
+import { Link, useNavigate } from "react-router-dom"; 
 import Swal from "sweetalert2";
 import { useState } from "react";
 
 function Cadastro() {
 
-  const navigate = useNavigate(); // 🔥 AQUI
+  const navigate = useNavigate(); 
 
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");

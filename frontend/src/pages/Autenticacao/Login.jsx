@@ -17,7 +17,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3000/auth/login", {
+      const response = await axios.post("http://localhost:5005/auth/login", {
         email,
         senha
       });
@@ -36,9 +36,9 @@ function Login() {
 
       // 🚀 AQUI FICA SUA LÓGICA
       if (usuario.temEmpresa) {
-        navigate("/painel-vendedor");
+        navigate("/dashboard");
       } else {
-        navigate("/escolha");
+        navigate("/dashboard");
       }
 
     } catch (err) {

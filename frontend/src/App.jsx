@@ -1,27 +1,26 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Autenticacao/Login";
 import Cadastro from "./pages/Autenticacao/Cadastro";
-import CadEmpresa from "./pages/Autenticacao/CadEmpresa";
-import Escolha from "./pages/Autenticacao/Escolha";
+import CadEmpresa from "./pages/Comerciante/CadEmpresa";
 import Header from "./components/Header";
 import Footers from "./components/Footers";
-import PainelCliente from "./pages/Cliente/PainelCliente";
 import Landing from "./pages/landing";
 import Home from "./pages/home";
+import Dashboard from "./pages/Cliente/Dashboard";
+import Pagamento from "./pages/Pagamento";
 
 function App() {
   return (
     <BrowserRouter>
       <Header />
       <Routes>
-        <Route path="/escolha" element={<Escolha />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Landing />} />
+        <Route path="/" element={<Pagamento />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/cadastro-empresa" element={<CadEmpresa />} />
-        <Route path="/painel-cliente" element={<PainelCliente />} />
         <Route path="/home" element={<Home />} />
-
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/landing" element={<Landing />} />
       </Routes>
       <Footers />
     </BrowserRouter>

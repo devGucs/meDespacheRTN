@@ -1,9 +1,6 @@
 const authService = require("../services/authService");
 
-
-// =======================
 // 📌 CADASTRO
-// =======================
 const register = async (req, res) => {
   try {
     const { nome, email, senha } = req.body;
@@ -16,10 +13,7 @@ const register = async (req, res) => {
   }
 };
 
-
-// =======================
-// 📌 LOGIN
-// =======================
+// 📌 LOGIN,
 const login = async (req, res) => {
   try {
     const { email, senha } = req.body;

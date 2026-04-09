@@ -1,29 +1,44 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const Empresa = require("../models/Empresa");
+const supabase = require('../config/db')
 
 // =======================
 // 📌 CADASTRO
 // =======================
-const register = async (nome, email, senha) => {
+const register = async (nome, email, senha, tipo) => {
 
-  if (!nome || !email || !senha) {
+  if (tipo === "consumidor") {
+    if (!nome || !email || !senha) {
     throw new Error("Preencha todos os campos");
   }
 
   // verificar se já existe
-  const usuarioExistente = await new Promise((resolve, reject) => {
-    User.findByEmail(email, (err, result) => {
-      if (err) return reject(err);
-      resolve(result);
-    });
-  });
+  const { data: usuarioExistente } = await supabase
+    .from('usuarios')
+    .select('*')
+    .eq('email', email)
+    .maybeSingle();
 
-  if (usuarioExistente.length > 0) {
-    throw new Error("Email já cadastrado");
+  if (usuarioExistente) {
+    throw new Error('Esse usuário já existe');
   }
 
   // criptografar senha
+  const senhaHash = await bcrypt.hash(senha, 10);
+
+  // inserir no banco
+  const { error } = await supabase
+    .from('usuarios')
+    .insert([{ nome, email, senha: senhaHash, tipo }]);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return { message: "Usuário cadastrado com sucesso" };
+  }
+
   const senhaHash = await bcrypt.hash(senha, 10);
 
   // salvar

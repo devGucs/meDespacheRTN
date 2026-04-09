@@ -3,9 +3,9 @@ const authService = require("../services/authService");
 // 📌 CADASTRO
 const register = async (req, res) => {
   try {
-    const { nome, email, senha } = req.body;
+    const { nome, email, senha, tipo } = req.body;
 
-    const result = await authService.register(nome, email, senha);
+    const result = await authService.register(nome, email, senha, tipo);
 
     res.status(201).json(result);
   } catch (err) {

@@ -8,6 +8,9 @@ import Landing from "./pages/landing";
 import Home from "./pages/home";
 import Dashboard from "./pages/Cliente/Dashboard";
 import Pagamento from "./pages/Pagamento";
+import Sucesso from "./pages/Sucesso";
+import Pendente from "./pages/Pendente";
+import Erro from "./pages/Erro";
 
 function App() {
   return (
@@ -15,12 +18,15 @@ function App() {
       <Header />
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Pagamento />} />
+        <Route path="/" element={<Landing />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/cadastro-empresa" element={<CadEmpresa />} />
-        <Route path="/home" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/landing" element={<Landing />} />
+        <Route path="/pagamento" element={<Pagamento />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/sucesso" element={<Sucesso />} />
+        <Route path="/pendente" element={<Pendente />} />
+        <Route path="/erro" element={<Erro />} />
       </Routes>
       <Footers />
     </BrowserRouter>

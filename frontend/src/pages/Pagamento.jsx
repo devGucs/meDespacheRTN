@@ -1,57 +1,100 @@
 import { useState } from "react";
-import api from "../services/api";
 
-export default function PaymentPage() {
-  const [qrCode, setQrCode] = useState(null);
+export default function PagamentoPage() {
   const [loading, setLoading] = useState(false);
+  const [pedido, setPedido] = useState(null);
 
-  async function handlePix() {
-    try {
-      setLoading(true);
-      const response = await api.post("/payment/create-pix", {
-        valor: 50,
-        descricao: "Pagamento TCC",
-        email: "test_user@test.com",
-      });
+  const itens = [
+    { id: 1, nome: "Plano Bronze", preco: 25 },
+    { id: 2, nome: "Plano Prata", preco: 50 },
+    { id: 3, nome: "Plano Ouro", preco: 100 },
+  ];
 
-      setQrCode(response.data.qr_code_base64);
-    } catch (err) {
-      console.error(err);
-      alert("Erro ao gerar pagamento");
-    } finally {
-      setLoading(false);
-    }
+  function selecionarItem(item) {
+    setPedido(item);
   }
 
+  async function pagar() {
+  if (!pedido) return alert("Selecione um item primeiro");
+
+  try {
+    setLoading(true);
+
+    const res = await fetch("http://localhost:5005/payment/create-checkout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        valor: pedido.preco,
+        descricao: pedido.nome,
+      }),
+    });
+
+    const data = await res.json();
+
+    console.log("RESPOSTA BACKEND:", data);
+
+    if (!data.init_point) {
+      console.error("Erro ao criar pagamento:", data);
+      alert("Erro ao iniciar pagamento");
+      return;
+    }
+
+    window.location.href = data.init_point;
+
+  } catch (err) {
+    console.error(err);
+    alert("Erro ao iniciar pagamento");
+  } finally {
+    setLoading(false);
+  }
+}
+
   return (
-    <div className="min-h-screen bg-gradient-to-r from-purple-600 to-indigo-700 flex items-center justify-center p-6">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">
-          Finalizar Pagamento
-        </h1>
-        <p className="text-gray-500 mb-6">
-          Escolha uma forma de pagamento segura
-        </p>
+    <div className="min-h-screen bg-purple-200 flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 space-y-4">
 
-        <button
-          onClick={handlePix}
-          disabled={loading}
-          className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-xl transition mb-4"
-        >
-          {loading ? "Gerando Pix..." : "Pagar com Pix"}
-        </button>
+        <h1 className="text-xl font-bold">Finalizar Pedido</h1>
 
-        <button
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-xl transition"
-        >
-          Pagar com Cartão
-        </button>
+        {/* lista de itens */}
+        <div className="space-y-2">
+          <p className="font-medium">Escolha seu plano</p>
 
-        {qrCode && (
-          <div className="mt-6">
-            <p className="text-gray-700 mb-2">Escaneie o QR Code:</p>
+          {itens.map((item) => (
+            <div
+              key={item.id}
+              onClick={() => selecionarItem(item)}
+              className={`p-3 rounded-xl border cursor-pointer flex justify-between ${
+                pedido?.id === item.id
+                  ? "border-purple-500 bg-purple-100"
+                  : "border-gray-200"
+              }`}
+            >
+              <span>{item.nome}</span>
+              <span>R$ {item.preco}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* resumo */}
+        {pedido && (
+          <div className="bg-gray-50 p-4 rounded-xl">
+            <p className="font-medium">Resumo</p>
+            <p className="text-sm text-gray-600">{pedido.nome}</p>
+            <p className="mt-2 font-bold text-lg">R$ {pedido.preco}</p>
           </div>
         )}
+
+        {/* botão */}
+        <button
+          onClick={pagar}
+          disabled={loading}
+          className="w-full bg-purple-500 text-white py-3 rounded-xl font-medium hover:bg-purple-600 transition"
+        >
+          {loading ? "Redirecionando..." : "Pagar com Mercado Pago"}
+        </button>
+
       </div>
     </div>
   );

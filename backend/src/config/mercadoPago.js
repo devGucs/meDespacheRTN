@@ -1,9 +1,9 @@
-import mercadopago from "mercadopago";
+const { MercadoPagoConfig } = require("mercadopago");
 
-const mercadopago = require("mercadopago");
-
-mercadopago.configure({
-  access_token: process.env.MP_ACCESS_TOKEN
+const client = new MercadoPagoConfig({
+  accessToken: process.env.MP_ACCESS_TOKEN,
 });
 
-module.exports = mercadopago;
+console.log("TOKEN:", process.env.MP_ACCESS_TOKEN);
+
+module.exports = client;

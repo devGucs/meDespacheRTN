@@ -1,37 +1,63 @@
 const express = require("express");
 const router = express.Router();
-const mercadopago = require("../config/mercadoPago");
-const paymentRoutes = require("./paymentRoutes");
 
-app.use("/payment", paymentRoutes);
+const { MercadoPagoConfig, Preference } = require("mercadopago");
 
-router.post("/create-pix", async (req, res) => {
+const client = new MercadoPagoConfig({
+  accessToken: process.env.MP_ACCESS_TOKEN,
+});
+
+const preference = new Preference(client);
+
+router.post("/create-checkout", async (req, res) => {
   try {
-    const { valor, descricao, email } = req.body;
+    const { valor, descricao } = req.body;
 
-    const payment_data = {
-      transaction_amount: Number(valor),
-      description: descricao,
-      payment_method_id: "pix",
-      payer: {
-        email: email
-      }
-    };
+    // validação básica (evita erro silencioso)
+    if (!valor || !descricao) {
+      return res.status(400).json({
+        error: "Dados inválidos",
+      });
+    }
 
-    const response = await mercadopago.payment.create(payment_data);
+    const result = await preference.create({
+      body: {
+        items: [
+          {
+            title: descricao,
+            quantity: 1,
+            unit_price: Number(valor),
+            currency_id: "BRL",
+          },
+        ],
 
-    const data = response.body.point_of_interaction.transaction_data;
+        // URLs de retorno (obrigatório)
+        back_urls: {
+          success: "http://localhost:5173/sucesso",
+          failure: "http://localhost:5173/erro",
+          pending: "http://localhost:5173/pendente",
+        },
 
-    res.json({
-      id: response.body.id,
-      qr_code: data.qr_code,
-      qr_code_base64: data.qr_code_base64
+        external_reference: "pedido_123",
+        
+        auto_return: "approved", // opcional, pode ser usado para identificar o pedido no seu sistema
+      },
+    });
+
+    return res.json({
+      init_point: result.init_point,
     });
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Erro ao gerar Pix" });
-  }
+  console.error("ERRO COMPLETO MP:", error);
+  console.error("DETALHE:", error?.cause);
+
+  return res.status(500).json({
+    error: "Erro no checkout",
+    detalhe: error.message,
+    full: error,
+  });
+}
 });
 
 module.exports = router;

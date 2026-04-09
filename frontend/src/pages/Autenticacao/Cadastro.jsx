@@ -14,6 +14,16 @@ function Cadastro() {
   const [nomeLoja, setNomeLoja] = useState("");
   const [cnpj, setCnpj] = useState("");
 
+  const formatarCnpj = (valor) => {
+  return valor
+    .replace(/\D/g, '')
+    .replace(/^(\d{2})(\d)/, '$1.$2')
+    .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+    .replace(/\.(\d{3})(\d)/, '.$1/$2')
+    .replace(/(\d{4})(\d)/, '$1-$2')
+    .slice(0, 18);
+};
+
   const handleCadastro = async (e) => {
     e.preventDefault();
 
@@ -41,7 +51,7 @@ function Cadastro() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ nome, email, senha, tipo }),
+        body: JSON.stringify({ nome, email, senha, tipo, nomeLoja, cnpj}),
       });
 
       const data = await response.json();
@@ -177,7 +187,7 @@ function Cadastro() {
         className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
       />
     </div>
-
+    
     {/* CNPJ */}
     <div>
       <label className="text-sm text-gray-700 font-medium">
@@ -187,7 +197,7 @@ function Cadastro() {
         type="text"
         placeholder="00.000.000/0000-00"
         value={cnpj}
-        onChange={(e) => setCnpj(e.target.value)}
+        onChange={(e) => setCnpj(formatarCnpj(e.target.value))}
         className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
       />
     </div>

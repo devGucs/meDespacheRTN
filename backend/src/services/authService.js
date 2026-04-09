@@ -4,12 +4,11 @@ const Empresa = require("../models/Empresa");
 const supabase = require('../config/db')
 
 // =======================
-// 📌 CADASTRO
+// CADASTRO
 // =======================
-const register = async (nome, email, senha, tipo) => {
+const register = async (nome, email, senha, tipo, nomeLoja, cnpj) => {
 
-  if (tipo === "consumidor") {
-    if (!nome || !email || !senha) {
+  if (!nome || !email || !senha) {
     throw new Error("Preencha todos os campos");
   }
 
@@ -28,33 +27,38 @@ const register = async (nome, email, senha, tipo) => {
   const senhaHash = await bcrypt.hash(senha, 10);
 
   // inserir no banco
-  const { error } = await supabase
-    .from('usuarios')
-    .insert([{ nome, email, senha: senhaHash, tipo }]);
+  const { data: usuario, error } = await supabase
+  .from('usuarios')
+  .insert([{ nome, email, senha: senhaHash, tipo }])
+  .select()
+  .single();
 
   if (error) {
     throw new Error(error.message);
   }
 
-  return { message: "Usuário cadastrado com sucesso" };
+  if (tipo === "comerciante") {
+
+    const { error: errorEmpresa } = await supabase
+      .from('empresas')
+      .insert([{
+        nome_loja: nomeLoja,
+        cnpj,
+        usuario_id: usuario.id
+      }]);
+
+    if (errorEmpresa) {
+      throw new Error(errorEmpresa.message);
+    }
   }
 
-  const senhaHash = await bcrypt.hash(senha, 10);
-
-  // salvar
-  await new Promise((resolve, reject) => {
-    User.create(nome, email, senhaHash, (err) => {
-      if (err) return reject(err);
-      resolve();
-    });
-  });
-
   return { message: "Usuário cadastrado com sucesso" };
+
 };
 
 
 // =======================
-// 📌 LOGIN
+// LOGIN
 // =======================
 const login = async (email, senha) => {
 
@@ -83,7 +87,7 @@ const login = async (email, senha) => {
     throw new Error("Senha incorreta");
   }
 
-  // 🔥 VERIFICAR SE TEM EMPRESA
+  // ERIFICAR SE TEM EMPRESA
   const empresa = await new Promise((resolve, reject) => {
     Empresa.findByUsuarioId(usuario.id, (err, result) => {
       if (err) return reject(err);
@@ -91,7 +95,7 @@ const login = async (email, senha) => {
     });
   });
 
-  // 🚀 RETORNO FINAL
+  // RETORNO FINAL
   return {
     id: usuario.id,
     nome: usuario.nome,

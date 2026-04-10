@@ -62,45 +62,51 @@ const register = async (nome, email, senha, tipo, nomeLoja, cnpj) => {
 // =======================
 const login = async (email, senha) => {
 
-  if (!email || !senha) {
+   if (!email || !senha) {
     throw new Error("Preencha todos os campos");
   }
 
-  // buscar usuário
-  const result = await new Promise((resolve, reject) => {
-    User.findByEmail(email, (err, result) => {
-      if (err) return reject(err);
-      resolve(result);
-    });
-  });
+  // uscar usuário pelo email dele rs
+  const { data: usuario, error } = await supabase
+    .from('usuarios')
+    .select('*')
+    .eq('email', email)
+    .maybeSingle();
 
-  if (result.length === 0) {
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!usuario) {
     throw new Error("Usuário não encontrado");
   }
 
-  const usuario = result[0];
-
-  // verificar senha
+  // comparar senha do cara
   const senhaValida = await bcrypt.compare(senha, usuario.senha);
 
   if (!senhaValida) {
     throw new Error("Senha incorreta");
   }
 
-  // ERIFICAR SE TEM EMPRESA
-  const empresa = await new Promise((resolve, reject) => {
-    Empresa.findByUsuarioId(usuario.id, (err, result) => {
-      if (err) return reject(err);
-      resolve(result);
-    });
-  });
+  //verificar se tem empresa (se for comerciante)
+  let temEmpresa = false;
 
-  // RETORNO FINAL
+  if (usuario.tipo === "comerciante") {
+    const { data: empresa } = await supabase
+      .from('empresas')
+      .select('*')
+      .eq('usuario_id', usuario.id)
+      .maybeSingle();
+
+    temEmpresa = !!empresa;
+  }
+
   return {
     id: usuario.id,
     nome: usuario.nome,
     email: usuario.email,
-    temEmpresa: empresa.length > 0
+    tipo: usuario.tipo,
+    temEmpresa
   };
 };
 

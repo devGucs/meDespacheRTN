@@ -14,54 +14,18 @@ const register = async (req, res) => {
 };
 
 // LOGIN,
-const login = async (email, senha) => {
+const login = async (req, res) => {
 
-  if (!email || !senha) {
-    throw new Error("Preencha todos os campos");
+  try {
+    const {email, senha} = req.body;
+
+    const result = await authService.login(email, senha);
+
+    res.status(201).json(result);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 
-  // uscar usuário pelo email dele rs
-  const { data: usuario, error } = await supabase
-    .from('usuarios')
-    .select('*')
-    .eq('email', email)
-    .maybeSingle();
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  if (!usuario) {
-    throw new Error("Usuário não encontrado");
-  }
-
-  // comparar senha do cara
-  const senhaValida = await bcrypt.compare(senha, usuario.senha);
-
-  if (!senhaValida) {
-    throw new Error("Senha incorreta");
-  }
-
-  //verificar se tem empresa (se for comerciante)
-  let temEmpresa = false;
-
-  if (usuario.tipo === "comerciante") {
-    const { data: empresa } = await supabase
-      .from('empresas')
-      .select('*')
-      .eq('usuario_id', usuario.id)
-      .maybeSingle();
-
-    temEmpresa = !!empresa;
-  }
-
-  return {
-    id: usuario.id,
-    nome: usuario.nome,
-    email: usuario.email,
-    tipo: usuario.tipo,
-    temEmpresa
-  };
 };
 
 

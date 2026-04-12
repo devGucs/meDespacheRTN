@@ -2,6 +2,10 @@ import logo from "../../assets/midislogoE.png";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useState } from "react";
+import { FaShoppingBag } from "react-icons/fa";
+import { BiSolidStore } from "react-icons/bi";
+
+
 
 function Cadastro() {
 
@@ -104,25 +108,27 @@ function Cadastro() {
           <button
             type="button"
             onClick={() => setTipo("consumidor")}
-            className={`w-1/2 py-2 rounded-lg text-sm font-medium transition ${
+            className={`w-1/2 py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-2 ${
               tipo === "consumidor"
                 ? "bg-white shadow text-gray-800"
                 : "text-gray-500"
             }`}
           >
-            🛒 Consumidor
+            <FaShoppingBag className="text-lg" />
+            Consumidor
           </button>
 
           <button
             type="button"
             onClick={() => setTipo("comerciante")}
-            className={`w-1/2 py-2 rounded-lg text-sm font-medium transition ${
+            className={`w-1/2 py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-2 ${
               tipo === "comerciante"
                 ? "bg-white shadow text-gray-800"
                 : "text-gray-500"
             }`}
           >
-            🏪 Comerciante
+            <BiSolidStore className="text-lg" />
+            Comerciante
           </button>
 
         </div>
@@ -140,7 +146,7 @@ function Cadastro() {
               placeholder="Seu nome"
               value={nome}
               onChange={(e) => setNome(e.target.value)}
-              className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
 
@@ -154,7 +160,7 @@ function Cadastro() {
               placeholder="seu@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
 
@@ -168,7 +174,7 @@ function Cadastro() {
               placeholder="Mín. 8 caracteres"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
-              className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
 
@@ -184,7 +190,7 @@ function Cadastro() {
         placeholder="Nome da sua loja"
         value={nomeLoja}
         onChange={(e) => setNomeLoja(e.target.value)}
-        className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+        className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
       />
     </div>
     
@@ -198,7 +204,7 @@ function Cadastro() {
         placeholder="00.000.000/0000-00"
         value={cnpj}
         onChange={(e) => setCnpj(formatarCnpj(e.target.value))}
-        className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+        className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
       />
     </div>
   </>

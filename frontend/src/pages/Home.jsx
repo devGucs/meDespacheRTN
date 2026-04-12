@@ -1,93 +1,112 @@
-import logo from "../assets/midislogoE.png";
+import { useState, useEffect } from "react";
+import Map from "../components/Map"; // ajusta o caminho
 
 function Home() {
+  const [search, setSearch] = useState("");
+  const [index, setIndex] = useState(0);
+
+  const banners = [
+    "/banner1.jpg",
+    "/banner2.jpg",
+    "/banner3.jpg",
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % banners.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="min-h-screen flex bg-gray-100">
 
-      {/* HEADER */}
-      <header className="bg-white shadow-md sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center py-4">
+      {/* SIDEBAR */}
+      <aside className="w-64 bg-purple-800 text-white flex flex-col p-6 space-y-6 shadow-lg">
+        <h2 className="text-2xl font-bold">Menu</h2>
 
-          <div className="flex items-center gap-3">
-            <img src={logo} className="w-14 h-14" />
-            <h1 className="text-2xl font-bold text-gray-900">
-              ME DESPACHE
-            </h1>
+        <nav className="flex flex-col gap-4">
+          <a href="#" className="hover:text-amber-300">Categorias</a>
+          <a href="#" className="hover:text-amber-300">Próximos</a>
+          <a href="#" className="hover:text-amber-300">Avaliados</a> 
+          <a href="#" className="hover:text-amber-300">Configurações</a>
+        </nav>
+      </aside>
+
+      {/* CONTEÚDO */}
+      <main className="flex-1 flex flex-col p-6 gap-6 mt-28">
+
+        {/* BUSCA */}
+        <div className="w-full flex justify-center">
+          <input
+            type="text"
+            placeholder="Buscar comércios..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full max-w-2xl px-5 py-3 rounded-xl border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
+          />
+        </div>
+
+        {/* MAPA REAL */}
+        <div className="w-full h-[420px] rounded-2xl shadow-inner overflow-hidden">
+          <Map />
+        </div>
+
+        {/* MAIS BEM AVALIADOS */}
+        <section>
+          <h2 className="text-xl font-bold text-purple-800 mb-4">
+            ⭐ Mais bem avaliados
+          </h2>
+
+          <div className="flex gap-4 overflow-x-auto pb-2">
+            {[1, 2, 3, 4].map((item) => (
+              <div
+                key={item}
+                className="min-w-[200px] bg-white p-4 rounded-xl shadow hover:scale-105 transition"
+              >
+                <div className="h-24 bg-gray-200 rounded mb-2"></div>
+                <h3 className="font-semibold">Comércio {item}</h3>
+                <p className="text-sm text-gray-500">⭐ 4.{item}</p>
+              </div>
+            ))}
           </div>
+        </section>
 
-          <nav className="hidden md:flex gap-6">
-            <a href="#produtos" className="hover:text-purple-700">Produtos</a>
-            <a href="#categorias" className="hover:text-purple-700">Categorias</a>
-            <a href="#" className="hover:text-purple-700">Sobre</a>
-            <a href="#" className="hover:text-purple-700">Contato</a>
-            <a href="/login" className="hover:text-purple-700">Login</a>
-          </nav>
+        {/* CARROSSEL */}
+        <section>
+          <h2 className="text-xl font-bold text-purple-800 mb-4">
+            🎯 Promoções
+          </h2>
 
-          <button className="text-gray-700 hover:text-purple-700">
-            🛒
-          </button>
-        </div>
-      </header>
-
-      {/* HERO */}
-      <section className="bg-purple-700 text-white py-20 text-center">
-        <h2 className="text-4xl font-bold mb-3">
-          Sua loja em ritmo digital!
-        </h2>
-
-        <p className="text-purple-200 mb-6">
-          Os melhores produtos pertinho de você
-        </p>
-
-        <a
-          href="#produtos"
-          className="bg-amber-400 text-black px-6 py-3 rounded-lg font-semibold hover:bg-amber-500"
-        >
-          Ver Produtos
-        </a>
-      </section>
-
-      {/* CATEGORIAS */}
-      <section id="categorias" className="py-12 bg-white text-center">
-        <h3 className="text-3xl font-bold mb-8">Categorias</h3>
-
-        <div className="flex flex-wrap justify-center gap-4">
-          <button className="px-4 py-2 bg-purple-700 text-white rounded-full">Todos</button>
-          <button className="px-4 py-2 border rounded-full hover:bg-purple-100">Eletrônicos</button>
-          <button className="px-4 py-2 border rounded-full hover:bg-purple-100">Acessórios</button>
-          <button className="px-4 py-2 border rounded-full hover:bg-purple-100">Móveis</button>
-        </div>
-      </section>
-
-      {/* PRODUTOS */}
-      <section id="produtos" className="py-12">
-        <h3 className="text-3xl font-bold text-center mb-12">
-          Nossos Produtos
-        </h3>
-
-        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4">
-
-          {[1,2,3].map((item) => (
-            <div key={item} className="bg-white p-4 rounded-xl shadow hover:scale-105 transition">
-              <div className="h-40 bg-gray-200 rounded mb-4"></div>
-              <h4 className="font-semibold">Produto {item}</h4>
-              <p className="text-gray-500">R$ 99,90</p>
-
-              <button className="mt-3 bg-amber-400 w-full py-2 rounded-lg">
-                Comprar
-              </button>
+          <div className="w-full h-52 md:h-64 relative overflow-hidden rounded-2xl shadow-lg">
+            <div
+              className="flex transition-transform duration-700"
+              style={{ transform: `translateX(-${index * 100}%)` }}
+            >
+              {banners.map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  className="w-full h-52 md:h-64 object-cover flex-shrink-0"
+                />
+              ))}
             </div>
-          ))}
 
-        </div>
-      </section>
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+              {banners.map((_, i) => (
+                <div
+                  key={i}
+                  className={`w-3 h-3 rounded-full ${
+                    i === index ? "bg-white" : "bg-white/50"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
 
-      {/* FOOTER */}
-      <footer className="bg-gray-950 text-white py-10 text-center">
-        <h2 className="text-xl font-bold">ME DESPACHE</h2>
-        <p className="text-gray-400">Sua loja em ritmo digital</p>
-      </footer>
-
+      </main>
     </div>
   );
 }

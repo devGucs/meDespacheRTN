@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Map from "../components/Map"; // ajusta o caminho
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const [search, setSearch] = useState("");

@@ -38,7 +38,7 @@ function Login() {
       if (usuario.temEmpresa) {
         navigate("/dashboard");
       } else {
-        navigate("/dashboard");
+        navigate("/home");
       }
 
     } catch (err) {

@@ -11,6 +11,7 @@ import Pagamento from "./pages/Pagamento";
 import Sucesso from "./pages/Sucesso";
 import Pendente from "./pages/Pendente";
 import Erro from "./pages/Erro";
+import Sobre from "./pages/Cliente/Sobre";
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/sucesso" element={<Sucesso />} />
         <Route path="/pendente" element={<Pendente />} />
         <Route path="/erro" element={<Erro />} />
+        <Route path="/sobre" element={<Sobre />} />
       </Routes>
       <Footers />
     </BrowserRouter>

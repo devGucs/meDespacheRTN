@@ -2,6 +2,7 @@ import logo from "../assets/midislogoE.png";
 import { FaUser } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { flushSync } from "react-dom";
 
 function Header() {
 
@@ -12,7 +13,14 @@ function Header() {
     const user = localStorage.getItem("usuario");
 
     if (user) {
-      setUsuario(JSON.parse(user));
+      try {
+        flushSync(() => {
+          setUsuario(JSON.parse(user));
+        });
+      } catch (error) {
+        console.error("Erro ao parsear dados do usuário:", error);
+        localStorage.removeItem("usuario"); // Limpa dados inválidos
+      }
     }
   }, []);
 

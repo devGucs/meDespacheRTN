@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Map from "../components/Map"; // ajusta o caminho
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 function Home() {
   const [search, setSearch] = useState("");
@@ -18,7 +18,7 @@ function Home() {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [banners.length]);
 
   return (
     <div className="min-h-screen flex bg-gray-100">

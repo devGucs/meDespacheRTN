@@ -35,10 +35,10 @@ function Login() {
       });
 
       // 🚀 AQUI FICA SUA LÓGICA
-      if (usuario.temEmpresa) {
+      if (usuario.tipo === "comerciante") {
         navigate("/dashboard");
       } else {
-        navigate("/home");
+        navigate("/");
       }
 
     } catch (err) {

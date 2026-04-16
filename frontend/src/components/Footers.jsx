@@ -18,7 +18,7 @@ function Footers() {
 
         {/* Links básicos */}
         <div className="flex gap-6 text-sm opacity-80">
-          <a href="#" className="hover:opacity-100 transition">Sobre</a>
+          <a href="/sobre" className="hover:opacity-100 transition">Sobre</a>
           <a href="#" className="hover:opacity-100 transition">Contato</a>
           <a href="#" className="hover:opacity-100 transition">Termos</a>
           <a href="#" className="hover:opacity-100 transition">Privacidade</a>

@@ -20,12 +20,12 @@ function App() {
       <Header />
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/lanfing" element={<Landing />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/cadastro-empresa" element={<CadEmpresa />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/pagamento" element={<Pagamento />} />
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Landing />} />
         <Route path="/sucesso" element={<Sucesso />} />
         <Route path="/pendente" element={<Pendente />} />
         <Route path="/erro" element={<Erro />} />

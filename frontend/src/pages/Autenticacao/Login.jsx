@@ -36,7 +36,7 @@ function Login() {
 
       // 🚀 AQUI FICA SUA LÓGICA
       if (usuario.tipo === "comerciante") {
-        navigate("/dashboard");
+        navigate("/cad-estabelecimento");
       } else {
         navigate("/");
       }

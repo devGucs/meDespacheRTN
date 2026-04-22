@@ -1,11 +1,16 @@
 import { useMapEvents } from "react-leaflet";
 
-export default function MapClickHandler({ setPosition }) {
+function MapClickHandler({ setPosition }) {
   useMapEvents({
     click(e) {
-      setPosition([e.latlng.lat, e.latlng.lng]);
+      setPosition({
+        lat: e.latlng.lat,
+        lng: e.latlng.lng,
+      });
     },
   });
 
   return null;
 }
+
+export default MapClickHandler;

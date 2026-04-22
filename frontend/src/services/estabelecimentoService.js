@@ -1,21 +1,20 @@
-import api from "./api";
+// services/estabelecimentoService.js
+import axios from "axios";
 
-// buscar todos
-export const getEstabelecimentos = async () => {
-  const res = await api.get("/estabelecimentos");
-  return res.data;
-};
+const API = "http://localhost:3000/estabelecimentos";
 
-// buscar próximos
-export const getProximos = async (lat, lng) => {
-  const res = await api.get(
-    `/estabelecimentos/proximos?lat=${lat}&lng=${lng}`
-  );
-  return res.data;
-};
+export async function criarEstabelecimento(data) {
+  const formData = new FormData();
 
-// criar
-export const criarEstabelecimento = async (data) => {
-  const res = await api.post("/estabelecimentos", data);
+  Object.keys(data).forEach((key) => {
+    formData.append(key, data[key]);
+  });
+
+  const res = await axios.post(API, formData);
   return res.data;
-};
+}
+
+export async function listarEstabelecimentos() {
+  const res = await axios.get(API);
+  return res.data;
+}

@@ -13,6 +13,8 @@ import Sucesso from "./pages/Sucesso";
 import Pendente from "./pages/Pendente";
 import Erro from "./pages/Erro";
 import Sobre from "./pages/Cliente/Sobre";
+import MapaCliente from "./pages/Cliente/MapaCliente";  
+import HomeVendedor from "./pages/Comerciante/HomeVendedor";
 
 
 
@@ -22,7 +24,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Landing />} />
+        <Route path="/landing" element={<Landing />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/pagamento" element={<Pagamento />} />
@@ -31,7 +33,10 @@ function App() {
         <Route path="/pendente" element={<Pendente />} />
         <Route path="/erro" element={<Erro />} />
         <Route path="/sobre" element={<Sobre />} />
-        <Route path="/cad-estabelecimento" element={<CadEstabelecimento />} />
+        <Route path="/" element={<CadEstabelecimento />} />
+        <Route path="/mapa-cliente" element={<MapaCliente />} />
+        <Route path="/home-vendedor" element={<HomeVendedor />} />
+        
       </Routes>
       <Footers />
     </BrowserRouter>

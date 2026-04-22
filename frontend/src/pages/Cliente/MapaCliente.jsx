@@ -1,34 +1,34 @@
 import { useEffect, useState } from "react";
-import Map from "../../components/Map";
-import { getProximos } from "../../services/estabelecimentoService";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import { listarEstabelecimentos } from "@/services/estabelecimentoService";
 
-function MapaCliente() {
-  const [position, setPosition] = useState(null);
-  const [estabelecimentos, setEstabelecimentos] = useState([]);
+function MapaClientes() {
+  const [locais, setLocais] = useState([]);
 
-  // pega localização do usuário
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((pos) => {
-      setPosition([pos.coords.latitude, pos.coords.longitude]);
-    });
+    async function load() {
+      const data = await listarEstabelecimentos();
+      setLocais(data);
+    }
+    load();
   }, []);
 
-  // busca estabelecimentos próximos
-  useEffect(() => {
-    if (!position) return;
-
-    getProximos(position[0], position[1])
-      .then(setEstabelecimentos);
-  }, [position]);
-
   return (
-    <div className="h-screen p-4">
-      <Map
-        position={position}
-        estabelecimentos={estabelecimentos}
-      />
-    </div>
+    <MapContainer
+      center={[-12.93, -38.38]}
+      zoom={13}
+      className="h-screen"
+    >
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+      {locais.map((l) => (
+        <Marker
+          key={l.id}
+          position={[l.latitude, l.longitude]}
+        />
+      ))}
+    </MapContainer>
   );
 }
 
-export default MapaCliente;
+export default MapaClientes;

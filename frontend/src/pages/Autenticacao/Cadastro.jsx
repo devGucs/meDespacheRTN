@@ -5,10 +5,7 @@ import { useState } from "react";
 import { FaShoppingBag } from "react-icons/fa";
 import { BiSolidStore } from "react-icons/bi";
 
-
-
 function Cadastro() {
-
   const navigate = useNavigate();
 
   const [tipo, setTipo] = useState("consumidor");
@@ -19,14 +16,14 @@ function Cadastro() {
   const [cnpj, setCnpj] = useState("");
 
   const formatarCnpj = (valor) => {
-  return valor
-    .replace(/\D/g, '')
-    .replace(/^(\d{2})(\d)/, '$1.$2')
-    .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
-    .replace(/\.(\d{3})(\d)/, '.$1/$2')
-    .replace(/(\d{4})(\d)/, '$1-$2')
-    .slice(0, 18);
-};
+    return valor
+      .replace(/\D/g, "")
+      .replace(/^(\d{2})(\d)/, "$1.$2")
+      .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+      .replace(/\.(\d{3})(\d)/, ".$1/$2")
+      .replace(/(\d{4})(\d)/, "$1-$2")
+      .slice(0, 18);
+  };
 
   const handleCadastro = async (e) => {
     e.preventDefault();
@@ -55,7 +52,14 @@ function Cadastro() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ nome, email, senha, tipo, nomeLoja, cnpj}),
+        body: JSON.stringify({
+          nome,
+          email,
+          senha,
+          tipo,
+          nomeLoja,
+          cnpj,
+        }),
       });
 
       const data = await response.json();
@@ -75,7 +79,6 @@ function Cadastro() {
       }).then(() => {
         navigate("/login");
       });
-
     } catch {
       Swal.fire({
         icon: "error",
@@ -86,9 +89,18 @@ function Cadastro() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-purple-700 px-4 pt-36 pb-10">
+    <div className="min-h-screen flex items-center justify-center px-4 pt-36 pb-10 relative overflow-hidden bg-[#070014]">
 
-      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md flex flex-col items-center">
+      {/* 🔥 BACKGROUND PREMIUM */}
+      <div className="absolute -top-40 -left-40 w-[600px] h-[600px] bg-purple-600 rounded-full blur-[180px] opacity-50"></div>
+      <div className="absolute top-[10%] right-[-200px] w-[600px] h-[600px] bg-fuchsia-500 rounded-full blur-[180px] opacity-50"></div>
+      <div className="absolute bottom-[-250px] left-[20%] w-[700px] h-[700px] bg-indigo-500 rounded-full blur-[200px] opacity-40"></div>
+
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(168,85,247,0.35),transparent_50%)]"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-950/50 via-transparent to-indigo-950/50"></div>
+
+      {/* CARD */}
+      <div className="relative z-10 bg-white shadow-xl rounded-2xl p-8 w-full max-w-md flex flex-col items-center">
 
         {/* LOGO */}
         <img src={logo} className="h-16 mb-2" alt="logo" />
@@ -171,49 +183,48 @@ function Cadastro() {
             </label>
             <input
               type="password"
-              placeholder="Mín. 8 caracteres"
+              placeholder="Mín. 6 caracteres"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
               className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
 
-            {tipo === "comerciante" && (
-  <>
-    {/* NOME DA LOJA */}
-    <div>
-      <label className="text-sm text-gray-700 font-medium">
-        Nome da loja *
-      </label>
-      <input
-        type="text"
-        placeholder="Nome da sua loja"
-        value={nomeLoja}
-        onChange={(e) => setNomeLoja(e.target.value)}
-        className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-      />
-    </div>
-    
-    {/* CNPJ */}
-    <div>
-      <label className="text-sm text-gray-700 font-medium">
-        CNPJ *
-      </label>
-      <input
-        type="text"
-        placeholder="00.000.000/0000-00"
-        value={cnpj}
-        onChange={(e) => setCnpj(formatarCnpj(e.target.value))}
-        className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-      />
-    </div>
-  </>
-)}
+          {/* CAMPOS DE COMERCIANTE */}
+          {tipo === "comerciante" && (
+            <>
+              <div>
+                <label className="text-sm text-gray-700 font-medium">
+                  Nome da loja *
+                </label>
+                <input
+                  type="text"
+                  placeholder="Nome da sua loja"
+                  value={nomeLoja}
+                  onChange={(e) => setNomeLoja(e.target.value)}
+                  className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-700 font-medium">
+                  CNPJ *
+                </label>
+                <input
+                  type="text"
+                  placeholder="00.000.000/0000-00"
+                  value={cnpj}
+                  onChange={(e) => setCnpj(formatarCnpj(e.target.value))}
+                  className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+              </div>
+            </>
+          )}
 
           {/* BOTÃO */}
           <button
             type="submit"
-            className="bg-purple-500 text-white py-3 rounded-full font-semibold hover:bg-purple-600 transition"
+            className="bg-purple-600 text-white py-3 rounded-full font-semibold hover:bg-purple-700 transition shadow-md"
           >
             Cadastrar
           </button>
@@ -235,4 +246,3 @@ function Cadastro() {
 }
 
 export default Cadastro;
-

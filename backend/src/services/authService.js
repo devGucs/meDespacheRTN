@@ -3,6 +3,50 @@ const User = require("../models/User");
 const Empresa = require("../models/Empresa");
 const supabase = require('../config/db')
 
+
+const GetMelhoresEmpresas = async () => {
+ 
+  const { data: empresas, error } = await supabase
+    .from('empresas')
+    .select(`
+      id,
+      nome_loja,
+      avaliacoes (
+        nota
+      )
+    `);
+
+  if (error) {
+    throw new Error("Erro ao buscar empresas e avaliações: " + error.message);
+  }
+
+  const empresasComMedia = empresas.map((empresa) => {
+    const totalAvaliacoes = empresa.avaliacoes.length;
+    let media = 0;
+
+    if (totalAvaliacoes > 0) {
+      
+      const somaNotas = empresa.avaliacoes.reduce((acumulador, avaliacao) => {
+        return acumulador + avaliacao.nota;
+      }, 0);
+      
+      media = somaNotas / totalAvaliacoes;
+    }
+
+    return {
+      id: empresa.id,
+      nome_loja: empresa.nome_loja,
+      nota: media,
+      quantidade_avaliacoes: totalAvaliacoes 
+    };
+  });
+
+  
+  empresasComMedia.sort((a, b) => b.nota - a.nota);
+
+  return empresasComMedia.slice(0, 10);
+};
+
 // =======================
 // CADASTRO
 // =======================
@@ -55,7 +99,6 @@ const register = async (nome, email, senha, tipo, nomeLoja, cnpj) => {
   return { message: "Usuário cadastrado com sucesso" };
 
 };
-
 
 // =======================
 // LOGIN
@@ -112,5 +155,6 @@ const login = async (email, senha) => {
 
 module.exports = {
   register,
-  login
+  login,
+  GetMelhoresEmpresas,
 };

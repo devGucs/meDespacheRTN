@@ -28,8 +28,21 @@ const login = async (req, res) => {
 
 };
 
+const GetMelhoresEmpresas = async(req, res) =>{
+  try {
+    
+    const result = await authService.GetMelhoresEmpresas();
 
+    res.status(201).json(result);
+    
+  } catch (error) {
+    
+    res.status(400).json({ error: err.message });
+
+  }
+}
 module.exports = {
   register,
   login,
+  GetMelhoresEmpresas,
 };

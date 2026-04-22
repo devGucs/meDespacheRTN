@@ -9,6 +9,8 @@ import banner3 from "../assets/banners/banner3.png";
 function Home() {
   const [search, setSearch] = useState("");
   const [index, setIndex] = useState(0);
+  
+  const [melhoresEmpresas, setMelhoresEmpresas] = useState([]);
 
   const banners = [banner1, banner2, banner3];
 
@@ -20,11 +22,30 @@ function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const buscarMelhoresAvaliacoes = async () => {
+      try {
+      
+        const response = await fetch("http://localhost:5005/auth/melhores_avaliacoes");
+        const data = await response.json();
+        
+        if (response.ok) {
+          setMelhoresEmpresas(data);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar avaliações:", error);
+      }
+    };
+
+    buscarMelhoresAvaliacoes();
+  }, []);
+
   return (
     <div className="flex bg-gray-100 min-h-screen">
 
       {/* SIDEBAR */}
       <aside className="w-64 bg-purple-800 text-white flex flex-col p-6 space-y-6 shadow-lg fixed top-0 left-0 h-full pt-28">
+        
         <h2 className="text-2xl font-bold">Menu</h2>
 
         <nav className="flex flex-col gap-4">
@@ -35,10 +56,8 @@ function Home() {
         </nav>
       </aside>
 
-      {/* CONTEÚDO */}
       <main className="flex-1 ml-64 flex flex-col p-6 gap-6 pt-32">
 
-        {/* BUSCA */}
         <div className="w-full flex justify-center">
           <input
             type="text"
@@ -49,7 +68,7 @@ function Home() {
           />
         </div>
 
-        {/* CARROSSEL (PRIMEIRO E MAIOR) */}
+        {/* CARROSSEL*/}
         <section>
           <h2 className="text-xl font-bold text-purple-800 mb-4">
             🎯 Promoções
@@ -83,27 +102,36 @@ function Home() {
           </div>
         </section>
 
-        {/* MAIS BEM AVALIADOS */}
+        {/* AVALIAÇ~EOS  */}
         <section>
           <h2 className="text-xl font-bold text-purple-800 mb-4">
             ⭐ Mais bem avaliados
           </h2>
 
           <div className="flex gap-4 overflow-x-auto pb-2">
-            {[1, 2, 3, 4].map((item) => (
-              <div
-                key={item}
-                className="min-w-[200px] bg-white p-4 rounded-xl shadow hover:scale-105 transition"
-              >
-                <div className="h-24 bg-gray-200 rounded mb-2"></div>
-                <h3 className="font-semibold">Comércio {item}</h3>
-                <p className="text-sm text-gray-500">⭐ 4.{item}</p>
-              </div>
-            ))}
+            {melhoresEmpresas.length > 0 ? (
+              melhoresEmpresas.map((empresa) => (
+                <div
+                  key={empresa.id}
+                  className="min-w-[200px] bg-white p-4 rounded-xl shadow hover:scale-105 transition"
+                >
+                  <div className="h-24 bg-gray-200 rounded mb-2 flex items-center justify-center text-gray-400 text-xs">
+                    Sem Imagem
+                  </div>
+                  <h3 className="font-semibold truncate" title={empresa.nome_loja}>
+                    {empresa.nome_loja}
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    ⭐ {empresa.nota ? empresa.nota.toFixed(1) : "N/A"}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">Nenhuma empresa encontrada...</p>
+            )}
           </div>
         </section>
 
-        {/* MAPA (AGORA EMBAIXO DOS AVALIADOS) */}
         <div className="w-full h-[420px] rounded-2xl shadow-inner overflow-hidden relative z-0">
           <Map />
         </div>

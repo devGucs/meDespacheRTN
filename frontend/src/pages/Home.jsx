@@ -9,7 +9,7 @@ import banner3 from "../assets/banners/banner3.png";
 function Home() {
   const [search, setSearch] = useState("");
   const [index, setIndex] = useState(0);
-  
+
   const [melhoresEmpresas, setMelhoresEmpresas] = useState([]);
 
   const banners = [banner1, banner2, banner3];
@@ -20,9 +20,9 @@ function Home() {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [banners.length]);
 
-  useEffect(() => {
+    useEffect(() => {
     const buscarMelhoresAvaliacoes = async () => {
       try {
       
@@ -40,37 +40,82 @@ function Home() {
     buscarMelhoresAvaliacoes();
   }, []);
 
+
   return (
-    <div className="flex bg-gray-100 min-h-screen">
+    <div className="min-h-screen relative overflow-hidden bg-[#070014] text-white">
+
+      {/* 🔥 BLOBS GRANDES (AGORA VISÍVEIS) */}
+      <div className="absolute -top-40 -left-40 w-[600px] h-[600px] bg-purple-600 rounded-full blur-[180px] opacity-50"></div>
+
+      <div className="absolute top-[10%] right-[-200px] w-[600px] h-[600px] bg-fuchsia-500 rounded-full blur-[180px] opacity-50"></div>
+
+      <div className="absolute bottom-[-250px] left-[20%] w-[700px] h-[700px] bg-indigo-500 rounded-full blur-[200px] opacity-40"></div>
+
+      {/* 🌟 LUZ CENTRAL (ESSENCIAL) */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(168,85,247,0.35),transparent_50%)]"></div>
+
+      {/* 🎨 OVERLAY AJUSTADO */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-950/50 via-transparent to-indigo-950/50"></div>
+
 
       {/* SIDEBAR */}
-      <aside className="w-64 bg-purple-800 text-white flex flex-col p-6 space-y-6 shadow-lg fixed top-0 left-0 h-full pt-28">
-        
-        <h2 className="text-2xl font-bold">Menu</h2>
+      <aside className="w-64 fixed top-0 left-0 h-full pt-28 z-10
+        bg-gradient-to-b from-purple-950/70 via-purple-900/60 to-indigo-950/70
+        backdrop-blur-2xl border-r border-white/10 shadow-2xl">
 
-        <nav className="flex flex-col gap-4">
-          <a href="#" className="hover:text-amber-300">Categorias</a>
-          <a href="#" className="hover:text-amber-300">Próximos</a>
-          <a href="#" className="hover:text-amber-300">Avaliados</a> 
-          <a href="#" className="hover:text-amber-300">Configurações</a>
+        <div className="px-6 mb-8">
+          <h2 className="text-2xl font-bold text-purple-200">
+            Menu
+          </h2>
+          <p className="text-sm text-purple-400">
+            Navegação
+          </p>
+        </div>
+
+        <nav className="flex flex-col gap-2 px-4">
+
+          {[
+            "Categorias",
+            "Próximos",
+            "Avaliados",
+            "Configurações"
+          ].map((item, i) => (
+            <a
+              key={i}
+              href="#"
+              className="px-4 py-3 rounded-xl text-purple-200
+              hover:bg-white/10 hover:text-white
+              transition-all duration-200
+              hover:pl-6 flex items-center justify-between"
+            >
+              {item}
+
+              {/* efeito de destaque */}
+              <span className="w-2 h-2 bg-purple-400 rounded-full opacity-0 group-hover:opacity-100"></span>
+            </a>
+          ))}
+
         </nav>
+
       </aside>
 
-      <main className="flex-1 ml-64 flex flex-col p-6 gap-6 pt-32">
+      {/* CONTEÚDO */}
+      <main className="relative z-10 flex-1 ml-64 flex flex-col p-6 gap-6 pt-32">
 
+        {/* BUSCA */}
         <div className="w-full flex justify-center">
           <input
             type="text"
             placeholder="Buscar comércios..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full max-w-2xl px-5 py-3 rounded-xl border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
+            className="w-full max-w-2xl px-5 py-3 rounded-xl bg-white/90 text-black border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
           />
         </div>
 
-        {/* CARROSSEL*/}
+        {/* CARROSSEL */}
         <section>
-          <h2 className="text-xl font-bold text-purple-800 mb-4">
+          <h2 className="text-xl font-bold text-purple-200 mb-4">
             🎯 Promoções
           </h2>
 
@@ -102,9 +147,9 @@ function Home() {
           </div>
         </section>
 
-        {/* AVALIAÇ~EOS  */}
+        {/* MAIS BEM AVALIADOS */}
         <section>
-          <h2 className="text-xl font-bold text-purple-800 mb-4">
+          <h2 className="text-xl font-bold text-white-800 mb-4">
             ⭐ Mais bem avaliados
           </h2>
 
@@ -132,7 +177,8 @@ function Home() {
           </div>
         </section>
 
-        <div className="w-full h-[420px] rounded-2xl shadow-inner overflow-hidden relative z-0">
+        {/* MAPA */}
+        <div className="w-full h-[420px] rounded-2xl shadow-inner overflow-hidden">
           <Map />
         </div>
 

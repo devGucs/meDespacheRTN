@@ -12,12 +12,13 @@ import Sucesso from "./pages/Sucesso";
 import Pendente from "./pages/Pendente";
 import Erro from "./pages/Erro";
 import Sobre from "./pages/Cliente/Sobre";
+import Loja from "./pages/Loja";
 
 
 function App() {
   return (
     <BrowserRouter>
-      <Header />
+      {/* <Header /> */}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
@@ -25,11 +26,12 @@ function App() {
         <Route path="/cadastro-empresa" element={<CadEmpresa />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/pagamento" element={<Pagamento />} />
-        <Route path="/" element={<Landing />} />
+        <Route path="/" element={<Loja />} />
         <Route path="/sucesso" element={<Sucesso />} />
         <Route path="/pendente" element={<Pendente />} />
         <Route path="/erro" element={<Erro />} />
         <Route path="/sobre" element={<Sobre />} />
+        <Route path="/landing" element={<Landing />} />
       </Routes>
       <Footers />
     </BrowserRouter>

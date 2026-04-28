@@ -158,3 +158,54 @@ module.exports = {
   login,
   GetMelhoresEmpresas,
 };
+
+// CHAT
+// 🔎 criar ou buscar conversa
+const getOrCreateConversa = async (cliente_id, vendedor_id) => {
+  const { data: conversaExistente } = await supabase
+    .from("conversas")
+    .select("*")
+    .eq("cliente_id", cliente_id)
+    .eq("vendedor_id", vendedor_id)
+    .maybeSingle();
+
+  if (conversaExistente) {
+    return conversaExistente;
+  }
+
+  const { data, error } = await supabase
+    .from("conversas")
+    .insert([{ cliente_id, vendedor_id }])
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  return data;
+};
+
+// 📥 buscar mensagens
+const getMensagens = async (conversa_id) => {
+  const { data, error } = await supabase
+    .from("mensagens")
+    .select("*")
+    .eq("conversa_id", conversa_id)
+    .order("criado_em");
+
+  if (error) throw new Error(error.message);
+
+  return data;
+};
+
+// 💬 enviar mensagem
+const enviarMensagem = async (mensagem) => {
+  const { data, error } = await supabase
+    .from("mensagens")
+    .insert([mensagem])
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  return data;
+};

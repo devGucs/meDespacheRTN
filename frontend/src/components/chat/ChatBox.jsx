@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import supabase from "../../lib/supabase";
 import Mensagem from "./Mensagem";
 import { Send, X } from "lucide-react";
 
@@ -7,172 +6,74 @@ export default function ChatBox({ vendedorId, user, fechar }) {
   const [mensagem, setMensagem] = useState("");
   const [chat, setChat] = useState([]);
   const [conversaId, setConversaId] = useState(null);
-  const [onlineUsers, setOnlineUsers] = useState([]);
 
   // 🔎 criar/buscar conversa
   useEffect(() => {
     const iniciar = async () => {
-      let { data } = await supabase
-        .from("conversas")
-        .select("*")
-        .eq("cliente_id", user.id)
-        .eq("vendedor_id", vendedorId)
-        .single();
+      const res = await fetch("http://localhost:5005/chat/conversa", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cliente_id: user.id,
+          vendedor_id: vendedorId,
+        }),
+      });
 
-      if (!data) {
-        const { data: nova } = await supabase
-          .from("conversas")
-          .insert([
-            {
-              cliente_id: user.id,
-              vendedor_id: vendedorId,
-            },
-          ])
-          .select()
-          .single();
-
-        setConversaId(nova.id);
-      } else {
-        setConversaId(data.id);
-      }
+      const data = await res.json();
+      setConversaId(data.id);
     };
 
     iniciar();
   }, []);
 
-  // 📥 carregar histórico
+  // 📥 buscar mensagens
   useEffect(() => {
     if (!conversaId) return;
 
-    const carregar = async () => {
-      let { data } = await supabase
-        .from("mensagens")
-        .select("*")
-        .eq("conversa_id", conversaId)
-        .order("criado_em");
-
+    const buscarMensagens = async () => {
+      const res = await fetch(
+        `http://localhost:5005/chat/mensagens/${conversaId}`
+      );
+      const data = await res.json();
       setChat(data);
     };
 
-    carregar();
+    buscarMensagens();
+
+    // 🔄 simula "tempo real"
+    const interval = setInterval(buscarMensagens, 2000);
+
+    return () => clearInterval(interval);
   }, [conversaId]);
 
-  // ⚡ realtime
-  useEffect(() => {
-    if (!conversaId) return;
-
-    const channel = supabase
-      .channel("chat")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "mensagens",
-          filter: `conversa_id=eq.${conversaId}`,
-        },
-        (payload) => {
-          setChat((prev) => [...prev, payload.new]);
-
-          if (Notification.permission === "granted") {
-            new Notification("Nova mensagem", {
-              body:
-                payload.new.tipo === "imagem"
-                  ? "📷 Imagem recebida"
-                  : payload.new.conteudo,
-            });
-          }
-        }
-      )
-      .subscribe();
-
-    return () => supabase.removeChannel(channel);
-  }, [conversaId]);
-
-  // 🟢 presença
-  useEffect(() => {
-    const channel = supabase.channel("online-users", {
-      config: { presence: { key: user.id } },
-    });
-
-    channel.on("presence", { event: "sync" }, () => {
-      const state = channel.presenceState();
-      setOnlineUsers(Object.keys(state));
-    });
-
-    channel.subscribe(async (status) => {
-      if (status === "SUBSCRIBED") {
-        await channel.track({ user: user.id });
-      }
-    });
-
-    return () => supabase.removeChannel(channel);
-  }, []);
-
-  const vendedorOnline = onlineUsers.includes(vendedorId);
-
-  // ✔️ marcar como lido
-  useEffect(() => {
-    if (!conversaId) return;
-
-    supabase
-      .from("mensagens")
-      .update({ lido: true })
-      .eq("conversa_id", conversaId)
-      .neq("remetente_id", user.id);
-  }, [chat]);
-
-  // 💬 enviar texto
+  // 💬 enviar mensagem
   const enviarMensagem = async () => {
     if (!mensagem.trim()) return;
 
-    await supabase.from("mensagens").insert([
-      {
+    await fetch("http://localhost:5005/chat/mensagem", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
         conversa_id: conversaId,
         remetente_id: user.id,
         destinatario_id: vendedorId,
         conteudo: mensagem,
-      },
-    ]);
+      }),
+    });
 
     setMensagem("");
   };
 
-  // 📎 enviar imagem
-  const enviarImagem = async (file) => {
-    const fileName = `${Date.now()}-${file.name}`;
-
-    await supabase.storage.from("chat").upload(fileName, file);
-
-    const { data } = supabase.storage
-      .from("chat")
-      .getPublicUrl(fileName);
-
-    await supabase.from("mensagens").insert([
-      {
-        conversa_id: conversaId,
-        remetente_id: user.id,
-        destinatario_id: vendedorId,
-        tipo: "imagem",
-        imagem_url: data.publicUrl,
-      },
-    ]);
-  };
-
-  // 🔔 pedir permissão
-  useEffect(() => {
-    if (Notification.permission !== "granted") {
-      Notification.requestPermission();
-    }
-  }, []);
-
   return (
     <>
       {/* HEADER */}
-      <div className="flex justify-between items-center p-3 border-b">
-        <h2 className="text-sm font-semibold">
-          {vendedorOnline ? "🟢 Online" : "⚪ Offline"}
-        </h2>
+      <div className="flex justify-between items-center p-4 border-b border-white/10 bg-gradient-to-r from-purple-700 to-pink-600 rounded-t-2xl">
+        <h2 className="text-sm font-semibold">Chat com vendedor</h2>
+
         <button onClick={fechar}>
           <X size={18} />
         </button>
@@ -186,23 +87,18 @@ export default function ChatBox({ vendedorId, user, fechar }) {
       </div>
 
       {/* INPUT */}
-      <div className="p-2 border-t space-y-2">
-        <input
-          type="file"
-          onChange={(e) => enviarImagem(e.target.files[0])}
-        />
-
+      <div className="p-3 border-t border-white/10 bg-[#0f0a1f]">
         <div className="flex gap-2">
           <input
             value={mensagem}
             onChange={(e) => setMensagem(e.target.value)}
-            placeholder="Digite..."
-            className="flex-1 border rounded-lg px-3 py-2 text-sm"
+            placeholder="Digite sua mensagem..."
+            className="flex-1 bg-[#1a1333] border border-white/10 rounded-full px-4 py-2 text-sm text-white outline-none"
           />
 
           <button
             onClick={enviarMensagem}
-            className="bg-orange-500 text-white p-2 rounded-lg"
+            className="bg-gradient-to-r from-purple-600 to-pink-500 text-white p-2 rounded-full"
           >
             <Send size={16} />
           </button>

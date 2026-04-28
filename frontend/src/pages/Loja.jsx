@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { ShoppingCart, Star, Search, MapPin, Bell, MessageCircle, Grid } from "lucide-react";
+import {ShoppingCart,Star,Search,MapPin,Bell,MessageCircle,Grid,} from "lucide-react";
 import logo from "../assets/midislogoE.png";
 import { Link } from "react-router-dom";
+
+// ✅ IMPORT DO CHAT
+import ChatPopup from "../components/chat/ChatPopup";
 
 function Navbar() {
   return (
@@ -55,22 +58,22 @@ export default function Loja() {
       nome: "Hambúrguer Artesanal",
       preco: 25.9,
       avaliacao: 4.8,
-      imagem: "https://via.placeholder.com/300"
+      imagem: "https://via.placeholder.com/300",
     },
     {
       id: 2,
       nome: "Pizza Calabresa",
       preco: 39.9,
       avaliacao: 4.6,
-      imagem: "https://via.placeholder.com/300"
+      imagem: "https://via.placeholder.com/300",
     },
     {
       id: 3,
       nome: "Açaí 500ml",
       preco: 18.5,
       avaliacao: 4.9,
-      imagem: "https://via.placeholder.com/300"
-    }
+      imagem: "https://via.placeholder.com/300",
+    },
   ]);
 
   return (
@@ -124,6 +127,13 @@ export default function Loja() {
           </div>
         ))}
       </div>
+
+      {/* 💬 CHAT FLUTUANTE */}
+      <ChatPopup
+        user={{ id: "cliente1" }}       // ⚠️ temporário
+        vendedorId={"vendedor1"}       // ⚠️ temporário
+      />
+
     </div>
   );
 }

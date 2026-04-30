@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Map from "../components/Map";
+import {useNavigate} from 'react-router-dom';
 
 // IMPORT DAS IMAGENS
 import banner1 from "../assets/banners/banner1.png";
@@ -13,6 +14,8 @@ function Home() {
   const [melhoresEmpresas, setMelhoresEmpresas] = useState([]);
 
   const banners = [banner1, banner2, banner3];
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -40,6 +43,9 @@ function Home() {
     buscarMelhoresAvaliacoes();
   }, []);
 
+  function AbrirLoja(id){
+  navigate(`/loja/${id}`);
+}
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-[#070014] text-white">
@@ -158,6 +164,7 @@ function Home() {
               melhoresEmpresas.map((empresa) => (
                 <div
                   key={empresa.id}
+                  onClick={() => AbrirLoja(empresa.id)}
                   className="min-w-[200px] bg-white p-4 rounded-xl shadow hover:scale-105 transition"
                 >
                   <div className="h-24 bg-gray-200 rounded mb-2 flex items-center justify-center text-gray-400 text-xs">

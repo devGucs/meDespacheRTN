@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {ShoppingCart,Star,Search,MapPin,Bell,MessageCircle,Grid,} from "lucide-react";
 import logo from "../assets/midislogoE.png";
 import { Link } from "react-router-dom";
 
-// ✅ IMPORT DO CHAT
-import ChatPopup from "../components/chat/ChatPopup";
+
+import ChatPopup from "../components/chat/Chatpopup";
 
 function Navbar() {
   return (
@@ -52,6 +53,33 @@ function Navbar() {
 }
 
 export default function Loja() {
+
+  const { id } = useParams();
+
+  const [loja, setLoja] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const buscarLoja = async () => {
+      try {
+        const response = await fetch(`http://localhost:5005/auth/loja/${id}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          setLoja(data);
+        } else {
+          console.error(data.error);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar loja:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) buscarLoja();
+  }, [id]);
+    
   const [produtos] = useState([
     {
       id: 1,

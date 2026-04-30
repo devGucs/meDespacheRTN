@@ -3,8 +3,8 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const paymentRoutes = require("./src/routes/payment");
-const chatRoutes = require("./routes/chat");
 const authRoutes = require("./src/routes/authRoutes");
+const chatRoutes = require("./src/routes/chatRoutes");
 
 const app = express();
 
@@ -14,6 +14,7 @@ app.use("/payment", paymentRoutes);
 
 // rota base
 app.use("/auth", authRoutes);
+app.use("/chat", chatRoutes);
 
 app.listen(5005, () => {
   console.log("Servidor rodando na porta 5005");

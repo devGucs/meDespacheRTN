@@ -14,7 +14,6 @@ import Erro from "./pages/Erro";
 import Sobre from "./pages/Cliente/Sobre";
 import Loja from "./pages/Loja";
 
-
 function App() {
   return (
     <BrowserRouter>
@@ -22,6 +21,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/loja/:id" element={<Loja />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/cadastro-empresa" element={<CadEmpresa />} />
         <Route path="/dashboard" element={<Dashboard />} />
